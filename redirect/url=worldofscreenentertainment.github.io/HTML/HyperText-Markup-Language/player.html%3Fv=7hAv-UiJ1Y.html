@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Redirecting…</title>
+
+  <meta
+    name="description"
+    content="You are being redirected to the requested destination."
+  />
+
+  <style>
+    :root {
+      --bg-1: #070b16;
+      --bg-2: #0d1326;
+      --card: rgba(18, 25, 48, 0.78);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f7f9ff;
+      --muted: #aeb7cf;
+      --accent: #6c8cff;
+      --accent-2: #8f6cff;
+      --success: #4ade80;
+      --danger: #fb7185;
+      --shadow: rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+
+      color: var(--text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background:
+        radial-gradient(
+          circle at 20% 20%,
+          rgba(108, 140, 255, 0.18),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 80% 80%,
+          rgba(143, 108, 255, 0.16),
+          transparent 32%
+        ),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+    }
+
+    /* Animated background glow */
+    .background-glow {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.2;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    .orb.one {
+      top: -100px;
+      left: -80px;
+      background: #526eff;
+    }
+
+    .orb.two {
+      right: -80px;
+      bottom: -120px;
+      background: #9a52ff;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      to {
+        transform: translate3d(40px, 30px, 0) scale(1.12);
+      }
+    }
+
+    .page {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .card {
+      position: relative;
+      padding: 42px;
+      overflow: hidden;
+
+      border: 1px solid var(--border);
+      border-radius: 28px;
+
+      background: var(--card);
+      box-shadow:
+        0 30px 80px var(--shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+
+      animation: cardIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .top-line {
+      width: 70px;
+      height: 4px;
+      margin-bottom: 30px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent-2)
+      );
+      box-shadow: 0 0 20px rgba(108, 140, 255, 0.45);
+    }
+
+    .icon-wrapper {
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 28px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+      background: rgba(108, 140, 255, 0.09);
+      border: 1px solid rgba(108, 140, 255, 0.2);
+
+      animation: iconPulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+      0%,
+      100% {
+        box-shadow:
+          0 0 0 0 rgba(108, 140, 255, 0.12);
+      }
+
+      50% {
+        box-shadow:
+          0 0 0 16px rgba(108, 140, 255, 0);
+      }
+    }
+
+    .redirect-icon {
+      width: 38px;
+      height: 38px;
+      color: var(--accent);
+    }
+
+    .content {
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: #91a6ff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 16px;
+
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .description {
+      max-width: 530px;
+      margin: 0 auto 30px;
+
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* Destination box */
+    .destination-box {
+      margin-bottom: 30px;
+      padding: 16px 18px;
+
+      text-align: left;
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .destination-label {
+      display: block;
+      margin-bottom: 7px;
+
+      color: #7f8aa5;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .destination {
+      display: block;
+
+      overflow: hidden;
+      color: #dce3ff;
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Countdown */
+    .countdown-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 28px;
+    }
+
+    .countdown {
+      position: relative;
+
+      width: 150px;
+      height: 150px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .countdown svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .countdown-track {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.07);
+      stroke-width: 6;
+    }
+
+    .countdown-progress {
+      fill: none;
+      stroke: url(#gradient);
+      stroke-width: 6;
+      stroke-linecap: round;
+
+      stroke-dasharray: 408.4;
+      stroke-dashoffset: 0;
+
+      transition:
+        stroke-dashoffset 1s linear,
+        opacity 0.3s ease;
+    }
+
+    .countdown-number {
+      position: relative;
+      z-index: 2;
+
+      font-size: 3.1rem;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+
+      text-shadow:
+        0 0 25px rgba(108, 140, 255, 0.25);
+
+      animation: numberAppear 0.4s ease;
+    }
+
+    @keyframes numberAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.7);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .seconds-label {
+      position: absolute;
+      bottom: 27px;
+
+      color: #8994af;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      height: 5px;
+      margin-bottom: 26px;
+
+      overflow: hidden;
+      border-radius: 999px;
+
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+
+      border-radius: inherit;
+
+      background: linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent-2)
+      );
+
+      box-shadow: 0 0 16px rgba(108, 140, 255, 0.5);
+
+      transition: width 1s linear;
+    }
+
+    .status {
+      min-height: 24px;
+      margin-bottom: 22px;
+
+      color: #98a4c0;
+      font-size: 0.88rem;
+    }
+
+    .status strong {
+      color: #dce3ff;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      min-width: 145px;
+      padding: 12px 20px;
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.055);
+
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+
+      cursor: pointer;
+      text-decoration: none;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.primary {
+      border-color: transparent;
+      background: linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent-2)
+      );
+
+      box-shadow:
+        0 8px 25px rgba(108, 140, 255, 0.2);
+    }
+
+    .button.primary:hover {
+      box-shadow:
+        0 12px 30px rgba(108, 140, 255, 0.32);
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      color: #68738d;
+      font-size: 0.74rem;
+      line-height: 1.5;
+    }
+
+    /* Redirecting state */
+    .redirecting .icon-wrapper {
+      animation: iconPulse 0.9s ease-in-out infinite;
+    }
+
+    .redirecting .countdown-number {
+      color: var(--success);
+    }
+
+    .complete .countdown-progress {
+      stroke: var(--success);
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      body {
+        padding: 14px;
+      }
+
+      .card {
+        padding: 30px 22px;
+        border-radius: 22px;
+      }
+
+      .icon-wrapper {
+        width: 72px;
+        height: 72px;
+      }
+
+      .countdown {
+        width: 135px;
+        height: 135px;
+      }
+
+      .countdown-number {
+        font-size: 2.8rem;
+      }
+
+      .description {
+        font-size: 0.93rem;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    /* Reduced motion accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-glow" aria-hidden="true">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+  </div>
+
+  <main class="page">
+    <section class="card" id="redirectCard">
+
+      <div class="top-line"></div>
+
+      <div class="content">
+
+        <!-- Redirect icon -->
+        <div class="icon-wrapper" aria-hidden="true">
+          <svg
+            class="redirect-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 3h7v7"></path>
+            <path d="M10 14L21 3"></path>
+            <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"></path>
+          </svg>
+        </div>
+
+        <div class="eyebrow">Leaving this page</div>
+
+        <h1>You’re being redirected</h1>
+
+        <p class="description">
+          The link you selected will take you to another website.
+          Please wait a moment while we safely redirect you to your
+          destination.
+        </p>
+
+        <!-- Destination -->
+        <div class="destination-box">
+          <span class="destination-label">
+            Destination
+          </span>
+
+          <span
+            class="destination"
+            id="destinationText"
+          >
+            https://worldofscreenentertainment.github.io/HTML/HyperText-Markup-Language/player.html?v=7hAv-UiJ1Y
+          </span>
+        </div>
+
+        <!-- Countdown -->
+        <div
+          class="countdown-area"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <div class="countdown">
+
+            <svg viewBox="0 0 150 150" aria-hidden="true">
+              <defs>
+                <linearGradient
+                  id="gradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    stop-color="#6c8cff"
+                  />
+
+                  <stop
+                    offset="100%"
+                    stop-color="#8f6cff"
+                  />
+                </linearGradient>
+              </defs>
+
+              <circle
+                class="countdown-track"
+                cx="75"
+                cy="75"
+                r="65"
+              />
+
+              <circle
+                class="countdown-progress"
+                id="countdownProgress"
+                cx="75"
+                cy="75"
+                r="65"
+              />
+            </svg>
+
+            <span
+              class="countdown-number"
+              id="countdownNumber"
+            >
+              5
+            </span>
+
+            <span class="seconds-label">
+              seconds
+            </span>
+
+          </div>
+        </div>
+
+        <div class="progress-container">
+          <div
+            class="progress-bar"
+            id="progressBar"
+          ></div>
+        </div>
+
+        <p class="status" id="status">
+          Redirecting automatically in
+          <strong>5 seconds</strong>…
+        </p>
+
+        <div class="actions">
+          <a
+            href="https://worldofscreenentertainment.github.io/HTML/HyperText-Markup-Language/player.html?v=7hAv-UiJ1Y"
+            class="button primary"
+            id="continueButton"
+          >
+            Continue now
+          </a>
+
+          <button
+            type="button"
+            class="button"
+            id="cancelButton"
+          >
+            Cancel
+          </button>
+        </div>
+
+        <p class="footer-note">
+          If you did not intend to visit this destination, you can
+          cancel the redirect and safely remain on this page.
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /*
+     * ============================================
+     * CONFIGURATION
+     * ============================================
+     *
+     * Change this URL to wherever you want users
+     * to be redirected.
+     */
+
+    const REDIRECT_URL = "https://example.com";
+
+    /*
+     * Countdown duration in seconds.
+     */
+    const REDIRECT_DELAY = 5;
+
+
+    /*
+     * ============================================
+     * ELEMENTS
+     * ============================================
+     */
+
+    const card = document.getElementById("redirectCard");
+    const countdownNumber =
+      document.getElementById("countdownNumber");
+
+    const countdownProgress =
+      document.getElementById("countdownProgress");
+
+    const progressBar =
+      document.getElementById("progressBar");
+
+    const status =
+      document.getElementById("status");
+
+    const destinationText =
+      document.getElementById("destinationText");
+
+    const continueButton =
+      document.getElementById("continueButton");
+
+    const cancelButton =
+      document.getElementById("cancelButton");
+
+
+    /*
+     * ============================================
+     * SET DESTINATION
+     * ============================================
+     */
+
+    destinationText.textContent = REDIRECT_URL;
+    continueButton.href = REDIRECT_URL;
+
+
+    /*
+     * ============================================
+     * CIRCLE CONFIGURATION
+     * ============================================
+     *
+     * Circumference:
+     * 2 × π × radius
+     *
+     * Radius = 65
+     */
+
+    const radius = 65;
+    const circumference = 2 * Math.PI * radius;
+
+    countdownProgress.style.strokeDasharray =
+      circumference;
+
+    countdownProgress.style.strokeDashoffset =
+      0;
+
+
+    /*
+     * ============================================
+     * COUNTDOWN
+     * ============================================
+     */
+
+    let remaining = REDIRECT_DELAY;
+    let cancelled = false;
+
+    function updateCountdown() {
+      countdownNumber.textContent = remaining;
+
+      const elapsed =
+        REDIRECT_DELAY - remaining;
+
+      const percentage =
+        (elapsed / REDIRECT_DELAY) * 100;
+
+      progressBar.style.width =
+        `${percentage}%`;
+
+      const offset =
+        circumference *
+        (elapsed / REDIRECT_DELAY);
+
+      countdownProgress.style.strokeDashoffset =
+        offset;
+
+      status.innerHTML =
+        `Redirecting automatically in <strong>${remaining} ${
+          remaining === 1 ? "second" : "seconds"
+        }</strong>…`;
+    }
+
+
+    /*
+     * ============================================
+     * REDIRECT
+     * ============================================
+     */
+
+    function redirectNow() {
+      if (cancelled) {
+        return;
+      }
+
+      card.classList.add("redirecting");
+      card.classList.add("complete");
+
+      countdownNumber.textContent = "✓";
+
+      progressBar.style.width = "100%";
+
+      countdownProgress.style.strokeDashoffset =
+        circumference;
+
+      status.innerHTML =
+        "<strong>Redirecting now…</strong>";
+
+      /*
+       * Small delay gives the final animation state
+       * time to appear before navigation.
+       */
+      setTimeout(() => {
+        window.location.href = REDIRECT_URL;
+      }, 250);
+    }
+
+
+    /*
+     * ============================================
+     * CANCEL
+     * ============================================
+     */
+
+    cancelButton.addEventListener("click", () => {
+      cancelled = true;
+
+      card.classList.remove("redirecting");
+
+      cancelButton.textContent =
+        "Redirect cancelled";
+
+      cancelButton.disabled = true;
+
+      status.innerHTML =
+        "<strong>Redirect cancelled.</strong> You can remain on this page.";
+
+      progressBar.style.width = "0%";
+
+      countdownProgress.style.strokeDashoffset =
+        0;
+
+      countdownNumber.textContent = "×";
+
+      countdownNumber.style.color =
+        "var(--danger)";
+    });
+
+
+    /*
+     * ============================================
+     * MANUAL CONTINUE
+     * ============================================
+     *
+     * The link itself handles manual navigation,
+     * so we don't need JavaScript here.
+     */
+
+
+    /*
+     * ============================================
+     * START COUNTDOWN
+     * ============================================
+     */
+
+    updateCountdown();
+
+    const timer = setInterval(() => {
+
+      if (cancelled) {
+        clearInterval(timer);
+        return;
+      }
+
+      remaining--;
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        redirectNow();
+        return;
+      }
+
+      /*
+       * Trigger a fresh animation on the number.
+       */
+      countdownNumber.style.animation = "none";
+
+      /*
+       * Force browser reflow so the animation
+       * restarts each second.
+       */
+      void countdownNumber.offsetWidth;
+
+      countdownNumber.style.animation =
+        "numberAppear 0.4s ease";
+
+      updateCountdown();
+
+    }, 1000);
+  </script>
+</body>
+</html>
